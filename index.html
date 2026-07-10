@@ -41,7 +41,7 @@
             position: relative;
             border-radius: 1rem;
             padding: 2px;
-            background: linear-gradient(90s, #3b82f6, #8b5cf6, #ec4899, #10b981, #3b82f6);
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #10b981, #3b82f6);
             background-size: 400% 400%;
         }
         .gemini-glow-container:focus-within {
@@ -118,11 +118,25 @@
             </div>
         </div>
 
-        <!-- SECTION 1: LIVE INVENTORY CARDS -->
+        <!-- SECTION 1: LIVE INVENTORY - NEAT LIST VIEW -->
         <section>
-            <div id="stockContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
-                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
+            <div class="bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-900/60 text-slate-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                <th class="p-4 w-12 text-center">Status</th>
+                                <th class="p-4">Fish Product Name</th>
+                                <th class="p-4 text-right pr-6">Available Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+                            <!-- Loading Skeleton Rows -->
+                            <tr class="animate-pulse"><td class="p-4" colspan="3"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
+                            <tr class="animate-pulse"><td class="p-4" colspan="3"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -167,13 +181,13 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbybZ66QUocgWFufPsZOqUYejy_slh32j3hNwGXfG9kfw5_njsgH6ZpAotdIy-Pn58Fj/exec";
 
         let serverPayload = { stock: [], sales: [] };
-        let currentStatusTab = "instock"; // or "soldout"
+        let currentStatusTab = "instock"; 
         let currentCategoryFilter = "all";
         let searchQuery = "";
 
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const stockContainer = document.getElementById('stockContainer');
+        const stockListBody = document.getElementById('stockListBody');
         const salesTableBody = document.getElementById('salesTableBody');
         const topSellerBadge = document.getElementById('topSellerBadge');
         const topSellerName = document.getElementById('topSellerName');
@@ -183,7 +197,6 @@
         const tabSoldOut = document.getElementById('tabSoldOut');
         const filterBtns = document.querySelectorAll('.filter-btn');
 
-        // Theme management switching module
         themeToggle.addEventListener('click', () => {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.replace('dark', 'light');
@@ -197,7 +210,6 @@
             lucide.createIcons();
         });
 
-        // Search engine key capture
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 searchQuery = searchInput.value.trim().toLowerCase();
@@ -205,7 +217,6 @@
             }
         });
 
-        // Split Tab Toggles
         tabInStock.addEventListener('click', () => {
             currentStatusTab = "instock";
             tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
@@ -220,7 +231,6 @@
             renderStockMetrics();
         });
 
-        // Category Filter Management Engine
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.className = "filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300");
@@ -242,50 +252,43 @@
         }
 
         function renderStockMetrics() {
-            stockContainer.innerHTML = '';
+            stockListBody.innerHTML = '';
             
-            // Core processing matching dynamic multi-layered rules
             const filteredStock = serverPayload.stock.filter(fish => {
                 const normalizedName = fish.name.toLowerCase();
                 const normalizedStatus = fish.status.toLowerCase();
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
                 
-                // 1. Availability validation layer
                 if (currentStatusTab === "instock" && isItemOut) return false;
                 if (currentStatusTab === "soldout" && !isItemOut) return false;
-
-                // 2. Text Search Input layer
                 if (searchQuery && !normalizedName.includes(searchQuery)) return false;
-
-                // 3. Category Filter layer
                 if (currentCategoryFilter !== "all" && !normalizedName.includes(currentCategoryFilter)) return false;
 
                 return true;
             });
 
             if(filteredStock.length === 0) {
-                stockContainer.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium bg-white dark:bg-slate-900/40 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">No matching variant configurations discovered in this filter tab.</div>`;
+                stockListBody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400 font-medium">No matching items located.</td></tr>`;
                 return;
             }
 
             filteredStock.forEach(fish => {
                 const isOut = fish.kg <= 0 || fish.status.toLowerCase().includes('out');
-                const cardNode = document.createElement('div');
-                cardNode.className = `p-5 rounded-2xl border bg-brand-cardLight dark:bg-brand-cardDark transition-all duration-300 hover:shadow-lg ${isOut ? 'border-red-200/70 dark:border-red-950/70 bg-red-50/10' : 'border-slate-200/80 dark:border-slate-800/80'}`;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/50";
                 
-                cardNode.innerHTML = `
-                    <div class="flex items-start justify-between gap-2">
-                        <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 leading-tight">${fish.name}</h3>
-                        <span class="flex h-2.5 w-2.5 shrink-0 rounded-full mt-1.5 ${isOut ? 'bg-red-500 shadow-md shadow-red-500/50' : 'bg-emerald-500 shadow-md shadow-emerald-500/50'}"></span>
-                    </div>
-                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-medium font-mono uppercase">Data Stream</span>
-                        <span class="text-sm font-bold tracking-tight ${isOut ? 'text-red-500 uppercase tracking-wide' : 'text-emerald-500'}">
-                            ${isOut ? 'SOLD OUT' : `${fish.kg.toFixed(2)} kg Available`}
-                        </span>
-                    </div>
+                tr.innerHTML = `
+                    <td class="p-4 text-center">
+                        <span class="inline-block h-2.5 w-2.5 rounded-full ${isOut ? 'bg-red-500 shadow-md shadow-red-500/40' : 'bg-emerald-500 shadow-md shadow-emerald-500/40'}"></span>
+                    </td>
+                    <td class="p-4 font-semibold text-slate-700 dark:text-slate-200 tracking-tight">
+                        ${fish.name}
+                    </td>
+                    <td class="p-4 text-right pr-6 font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-xs' : 'text-emerald-500'}">
+                        ${isOut ? 'Sold Out' : `${fish.kg.toFixed(2)} kg`}
+                    </td>
                 `;
-                stockContainer.appendChild(cardNode);
+                stockListBody.appendChild(tr);
             });
         }
 
