@@ -29,8 +29,7 @@
     </script>
     <!-- Lucide Vector Icons Engine -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Export Engine Libraries (Excel, PDF, Image) -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- PDF & Capture Engines -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -125,9 +124,20 @@
             </div>
         </div>
 
-        <!-- SECTION 1: LIVE INVENTORY - NEAT LIST VIEW -->
-        <section>
-            <div class="bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm overflow-hidden">
+        <!-- SECTION 1: LIVE INVENTORY LIST VIEW -->
+        <section class="space-y-3">
+            <!-- Multi-Format Export Control Group for Stocks -->
+            <div class="flex items-center justify-between flex-wrap gap-3 px-1">
+                <span class="text-sm font-bold text-slate-400 tracking-wide uppercase">Live Stock Manifest</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="exportStockExcel()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition-all active:scale-95"><i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Excel</button>
+                    <button onclick="exportStockPDF()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow transition-all active:scale-95"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> PDF</button>
+                    <button onclick="exportStockImage()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow transition-all active:scale-95"><i data-lucide="image" class="w-3.5 h-3.5"></i> PNG Image</button>
+                </div>
+            </div>
+
+            <!-- Target area for Capture Engine -->
+            <div id="stockCaptureArea" class="bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm overflow-hidden p-1">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -145,27 +155,17 @@
             </div>
         </section>
 
-        <!-- SECTION 2: ANALYTICS & REPORTING (EXPORT CONTAINER) -->
+        <!-- SECTION 2: ANALYTICS & REPORTING -->
         <section class="border-t border-slate-200 dark:border-slate-800/80 pt-10">
-            <div id="reportContainer" class="bg-brand-cardLight dark:bg-brand-cardDark rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-xl shadow-slate-200/40 dark:shadow-none">
+            <div class="bg-brand-cardLight dark:bg-brand-cardDark rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-xl shadow-slate-200/40 dark:shadow-none">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
                         <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">TruSea Weekly Fish Sales Report</h2>
                         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Weekly enna fish evlov fish sales aachu kg wise tracking parameters</p>
                     </div>
-                    
-                    <!-- Multi-Format Dropdown Download Actions -->
-                    <div class="relative inline-block text-left shrink-0">
-                        <button id="dropdownToggleBtn" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 text-sm focus:outline-none">
-                            <i data-lucide="download" class="w-4 h-4"></i> Export Report <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
-                        </button>
-                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800/50">
-                            <button onclick="exportAsExcel()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"><i data-lucide="file-spreadsheet" class="w-4 h-4 mr-3 text-emerald-500"></i> Save as Excel (.xlsx)</button>
-                            <button onclick="exportAsPDF()" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"><i data-lucide="file-text" class="w-4 h-4 mr-3 text-red-500"></i> Save as PDF (.pdf)</button>
-                            <button onclick="exportAsImage('png')" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"><i data-lucide="image" class="w-4 h-4 mr-3 text-blue-500"></i> Save as PNG Image</button>
-                            <button onclick="exportAsImage('jpg')" class="flex items-center w-full px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"><i data-lucide="image-down" class="w-4 h-4 mr-3 text-amber-500"></i> Save as JPG Image</button>
-                        </div>
-                    </div>
+                    <button id="downloadBtn" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-98 text-sm">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download Weekly Report
+                    </button>
                 </div>
 
                 <div id="topSellerBadge" class="hidden items-center gap-4 bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl text-amber-700 dark:text-amber-400 mb-8">
@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="overflow-x-auto custom-scrollbar border border-slate-100 dark:border-slate-800 rounded-2xl shadow-inner">
-                    <table id="salesTable" class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
                                 <th class="p-4">Time Interval</th>
@@ -199,6 +199,7 @@
         let currentStatusTab = "instock"; 
         let currentCategoryFilter = "all";
         let searchQuery = "";
+        let runningStockContext = []; // Remembers current filter array list for file downloads
 
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -206,22 +207,13 @@
         const salesTableBody = document.getElementById('salesTableBody');
         const topSellerBadge = document.getElementById('topSellerBadge');
         const topSellerName = document.getElementById('topSellerName');
-        const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
-        const dropdownMenu = document.getElementById('dropdownMenu');
+        const downloadBtn = document.getElementById('downloadBtn');
         const searchInput = document.getElementById('searchInput');
         const tabAllStocks = document.getElementById('tabAllStocks');
         const tabInStock = document.getElementById('tabInStock');
         const tabSoldOut = document.getElementById('tabSoldOut');
         const filterBtns = document.querySelectorAll('.filter-btn');
 
-        // Dropdown Toggle Control
-        dropdownToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('hidden');
-        });
-        document.addEventListener('click', () => dropdownMenu.classList.add('hidden'));
-
-        // Theme management switching module
         themeToggle.addEventListener('click', () => {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.replace('dark', 'light');
@@ -291,7 +283,8 @@
 
         function renderStockMetrics() {
             stockListBody.innerHTML = '';
-            const filteredStock = serverPayload.stock.filter(fish => {
+            
+            runningStockContext = serverPayload.stock.filter(fish => {
                 const normalizedName = fish.name.toLowerCase();
                 const normalizedStatus = fish.status.toLowerCase();
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
@@ -304,12 +297,12 @@
                 return true;
             });
 
-            if(filteredStock.length === 0) {
+            if(runningStockContext.length === 0) {
                 stockListBody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400 font-medium">No matching items located.</td></tr>`;
                 return;
             }
 
-            filteredStock.forEach(fish => {
+            runningStockContext.forEach(fish => {
                 const isOut = fish.kg <= 0 || fish.status.toLowerCase().includes('out');
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/50";
@@ -326,6 +319,59 @@
                     </td>
                 `;
                 stockListBody.appendChild(tr);
+            });
+        }
+
+        // --- STOCKS EXPORT CONTROLLERS ---
+        function exportStockExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,Fish Variant Name,Current Status,Available Stock (kg)\n";
+            runningStockContext.forEach(fish => {
+                const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : "IN STOCK";
+                csvContent += `"${fish.name}",${status},${fish.kg.toFixed(2)}\n`;
+            });
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `TruSea_Stock_Report_${currentStatusTab}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportStockPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFont("helvetica", "bold");
+            doc.text("TruSea Live Inventory Stock Manifest", 14, 16);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Generated on: ${new Date().toLocaleDateString()} | Filter: ${currentStatusTab.toUpperCase()}`, 14, 23);
+            
+            let y = 32;
+            doc.setFont("helvetica", "bold");
+            doc.text("Product Description", 15, y);
+            doc.text("Available (kg)", 165, y);
+            doc.line(14, y+2, 195, y+2);
+            y += 8;
+
+            doc.setFont("helvetica", "normal");
+            runningStockContext.forEach(fish => {
+                if (y > 275) { doc.addPage(); y = 20; }
+                const displayWeight = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
+                doc.text(fish.name, 15, y);
+                doc.text(displayWeight, 165, y);
+                y += 7;
+            });
+            doc.save(`TruSea_Stock_Report_${currentStatusTab}.pdf`);
+        }
+
+        function exportStockImage() {
+            const target = document.getElementById("stockCaptureArea");
+            html2canvas(target, { scale: 2, useCORS: true }).then(canvas => {
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.setAttribute("download", `TruSea_Stock_Manifest_${currentStatusTab}.png`);
+                link.setAttribute("href", image);
+                link.click();
             });
         }
 
@@ -365,65 +411,19 @@
             });
         }
 
-        // ================= EXPORT MODULE CONTROLLERS =================
-
-        // 1. Excel Generation (.xlsx)
-        function exportAsExcel() {
-            const dataToExport = serverPayload.sales.map(item => ({
-                "Time Interval": item.week,
-                "Product Description": item.name,
-                "Quantity Sold Out (kg)": item.kg
-            }));
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Weekly Sales");
-            XLSX.writeFile(workbook, "TruSea_Weekly_Fish_Sales_Report.xlsx");
-        }
-
-        // 2. PDF Generation (.pdf)
-        function exportAsPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFont("Helvetica", "bold");
-            doc.text("TruSea Weekly Fish Sales Report", 14, 20);
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "normal");
-            doc.text("Generated: " + new Date().toLocaleDateString(), 14, 26);
-            
-            let yAxis = 40;
-            doc.setFont("Helvetica", "bold");
-            doc.text("Week", 14, yAxis);
-            doc.text("Product Description", 50, yAxis);
-            doc.text("Sold (kg)", 170, yAxis);
-            doc.line(14, yAxis + 2, 195, yAxis + 2);
-            
-            yAxis += 10;
-            doc.setFont("Helvetica", "normal");
+        downloadBtn.addEventListener('click', () => {
+            let csvBody = "data:text/csv;charset=utf-8,Time Interval,Product Description,Volume Sold Out (kg)\n";
             serverPayload.sales.forEach(row => {
-                if(yAxis > 270) { doc.addPage(); yAxis = 20; }
-                doc.text(String(row.week), 14, yAxis);
-                doc.text(String(row.name), 50, yAxis);
-                doc.text(row.kg.toFixed(2) + " kg", 170, yAxis);
-                yAxis += 8;
+                csvBody += `"${row.week}","${row.name}",${row.kg}\n`;
             });
-            doc.save("TruSea_Weekly_Fish_Sales_Report.pdf");
-        }
-
-        // 3. Image Compilation Engine (PNG or JPG)
-        function exportAsImage(format) {
-            const container = document.getElementById('reportContainer');
-            // Hide the export trigger button temporarily during image capture snippet rendering
-            dropdownToggleBtn.style.visibility = 'hidden';
-
-            html2canvas(container, { scale: 2, useCORS: true }).then(canvas => {
-                dropdownToggleBtn.style.visibility = 'visible';
-                const fileExtension = format === 'png' ? 'image/png' : 'image/jpeg';
-                const link = document.createElement('a');
-                link.download = `TruSea_Weekly_Fish_Sales_Report.${format}`;
-                link.href = canvas.toDataURL(fileExtension, 1.0);
-                link.click();
-            });
-        }
+            const URIStream = encodeURI(csvBody);
+            const hiddenDownloadAnchor = document.createElement("a");
+            hiddenDownloadAnchor.setAttribute("href", URIStream);
+            hiddenDownloadAnchor.setAttribute("download", "TruSea_Weekly_Fish_Sales_Report.csv");
+            document.body.appendChild(hiddenDownloadAnchor);
+            hiddenDownloadAnchor.click();
+            document.body.removeChild(hiddenDownloadAnchor);
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
