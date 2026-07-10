@@ -10,9 +10,9 @@
     <!-- 3D Icon Assets for Browser Tab (Favicon) & Search Lookups -->
     <link rel="icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
     <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/3d-fluency/180/fish.png">
+    <link class="apple-touch-icon" href="https://img.icons8.com/3d-fluency/180/fish.png">
 
-    <!-- Social Media Meta Tags (Controls preview blocks on WhatsApp, Insta, X) -->
+    <!-- Social Media Meta Tags -->
     <meta property="og:title" content="TruSea Fish Stocks Update">
     <meta property="og:description" content="Real-time premium inventory control ledger. Updated live from main distribution center.">
     <meta property="og:type" content="website">
@@ -222,9 +222,18 @@
             lucide.createIcons();
         });
 
+        // Search engine key capture
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 searchQuery = searchInput.value.trim().toLowerCase();
+                renderStockMetrics();
+            }
+        });
+
+        // FIXED: Instant auto-reset when user erases the search bar content
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value.trim() === "") {
+                searchQuery = "";
                 renderStockMetrics();
             }
         });
