@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruSea Premium Fish Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { dark: '#0b0f19', cardDark: '#131c2e', light: '#f4f7fe', cardLight: '#ffffff' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.25s, color 0.25s; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-brand-light text-slate-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen custom-scrollbar">
+
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-brand-dark/70 border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-4 transition-all">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-500/30">
+                    <i data-lucide="ship"></i>
+                </div>
+                <span class="text-xl font-black tracking-tight bg-gradient-to-r from-blue-500 to-emerald-400 bg-clip-text text-transparent">TruSea Analytics</span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    Live Syncing
+                </div>
+                <button id="themeToggle" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all shadow-sm">
+                    <i id="themeIcon" data-lucide="sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        
+        <section>
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight">Current Fish Stock</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Real-time availability status from master inventory</p>
+                </div>
+            </div>
+
+            <div id="stockContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
+                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
+            </div>
+        </section>
+
+        <section class="border-t border-slate-200 dark:border-slate-800/80 pt-10">
+            <div class="bg-brand-cardLight dark:bg-brand-cardDark rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-xl shadow-slate-200/40 dark:shadow-none">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">TruSea Weekly Fish Sales Report</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Weekly enna fish evlov fish sales aachu kg wise tracking parameters</p>
+                    </div>
+                    <button id="downloadBtn" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-98 text-sm">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download Weekly Report
+                    </button>
+                </div>
+
+                <div id="topSellerBadge" class="hidden items-center gap-4 bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl text-amber-700 dark:text-amber-400 mb-8 animate-fade-in">
+                    <div class="bg-amber-500 text-white p-2 rounded-xl shadow-md">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-bold opacity-75">Top Selling Fish Product</p>
+                        <span id="topSellerName" class="text-lg font-bold">Identifying metrics...</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar border border-slate-100 dark:border-slate-800 rounded-2xl shadow-inner">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                                <th class="p-4">Time Interval</th>
+                                <th class="p-4">Product Variant Description</th>
+                                <th class="p-4 text-right">Quantity Sold Out (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // PASTE YOUR DEPLOYED WEB APP API URL HERE
+        const API_URL = "https://script.google.com/macros/s/AKfycbycJVuJW8OtEk8_qNIjK1d1V2FvQYBMxkUfzzBjPKhC8xtHpIuX8-WQS_HRgW2rMYI7/exec";
+
+        let serverPayload = { stock: [], sales: [] };
+
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const stockContainer = document.getElementById('stockContainer');
+        const salesTableBody = document.getElementById('salesTableBody');
+        const topSellerBadge = document.getElementById('topSellerBadge');
+        const topSellerName = document.getElementById('topSellerName');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Theme Storage Toggle Engine
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        });
+
+        // Request execution pipeline
+        async function fetchSpreadsheetContext() {
+            try {
+                const queryStream = await fetch(API_URL);
+                serverPayload = await queryStream.json();
+                renderStockMetrics();
+                renderSalesMetrics();
+            } catch (err) {
+                console.error("Connection matrix error with Google Spreadsheet:", err);
+            }
+        }
+
+        // Render Cards with strict color assignment
+        function renderStockMetrics() {
+            stockContainer.innerHTML = '';
+            serverPayload.stock.forEach(fish => {
+                const normalizedStatus = fish.status.toLowerCase();
+                const isOut = normalizedStatus.includes('out') || fish.kg <= 0;
+                
+                const cardNode = document.createElement('div');
+                cardNode.className = `p-5 rounded-2xl border bg-brand-cardLight dark:bg-brand-cardDark transition-all duration-300 hover:shadow-lg ${isOut ? 'border-red-200/70 dark:border-red-950/70 bg-red-50/10' : 'border-slate-200/80 dark:border-slate-800/80'}`;
+                
+                cardNode.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 leading-tight">${fish.name}</h3>
+                        <span class="flex h-2.5 w-2.5 shrink-0 rounded-full mt-1.5 ${isOut ? 'bg-red-500 shadow-md shadow-red-500/50' : 'bg-emerald-500 shadow-md shadow-emerald-500/50'}"></span>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium font-mono uppercase">Data Stream</span>
+                        <span class="text-sm font-bold tracking-tight ${isOut ? 'text-red-500 uppercase' : 'text-emerald-500'}">
+                            ${isOut ? 'SOLD OUT' : `${fish.kg.toFixed(2)} kg Available`}
+                        </span>
+                    </div>
+                `;
+                stockContainer.appendChild(cardNode);
+            });
+        }
+
+        // Render analytics framework with highlighting engine
+        function renderSalesMetrics() {
+            salesTableBody.innerHTML = '';
+            if (serverPayload.sales.length === 0) {
+                salesTableBody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400 font-medium">No sales transactions logged matching rules.</td></tr>`;
+                return;
+            }
+
+            // Compute top volumes dynamically
+            let highestVolume = 0;
+            let topProduct = "";
+            serverPayload.sales.forEach(sale => {
+                if (sale.kg > highestVolume) {
+                    highestVolume = sale.kg;
+                    topProduct = sale.name;
+                }
+            });
+
+            if (topProduct) {
+                topSellerName.innerText = `${topProduct} — ${highestVolume.toFixed(2)} kg Sold`;
+                topSellerBadge.classList.replace('hidden', 'flex');
+            }
+
+            // Map and paint records onto DOM row objects
+            serverPayload.sales.forEach(row => {
+                const isLeader = row.name === topProduct;
+                const tr = document.createElement('tr');
+                tr.className = `hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors ${isLeader ? 'bg-amber-500/5 font-semibold text-amber-900 dark:text-amber-300' : ''}`;
+                tr.innerHTML = `
+                    <td class="p-4 text-slate-400 font-mono font-medium text-xs">${row.week}</td>
+                    <td class="p-4 font-medium text-slate-800 dark:text-slate-200">
+                        ${row.name} ${isLeader ? '👑' : ''}
+                    </td>
+                    <td class="p-4 text-right font-mono font-bold text-blue-600 dark:text-blue-400">${row.kg.toFixed(2)} kg</td>
+                `;
+                salesTableBody.appendChild(tr);
+            });
+        }
+
+        // Executable CSV Compilation link builder
+        downloadBtn.addEventListener('click', () => {
+            let csvBody = "data:text/csv;charset=utf-8,";
+            csvBody += "Time Interval,Product Description,Volume Sold Out (kg)\n";
+            serverPayload.sales.forEach(row => {
+                csvBody += `"${row.week}","${row.name}",${row.kg}\n`;
+            });
+            const URIStream = encodeURI(csvBody);
+            const hiddenDownloadAnchor = document.createElement("a");
+            hiddenDownloadAnchor.setAttribute("href", URIStream);
+            hiddenDownloadAnchor.setAttribute("download", "TruSea_Weekly_Fish_Sales_Report.csv");
+            document.body.appendChild(hiddenDownloadAnchor);
+            hiddenDownloadAnchor.click();
+            document.body.removeChild(hiddenDownloadAnchor);
+        });
+
+        // Initialize and schedule loops
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+            fetchSpreadsheetContext();
+            setInterval(fetchSpreadsheetContext, 25000); // Dynamic re-polling loop smoothly every 25 seconds
+        });
+    </script>
+</body>
+</html>
