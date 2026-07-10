@@ -92,9 +92,12 @@
                 </div>
             </div>
 
-            <!-- Main Split Status Tabs (In Stock vs Sold Out) -->
+            <!-- Updated Main Split Status Tabs (All, In Stock, Sold Out) -->
             <div class="flex justify-center">
                 <div class="bg-slate-200/60 dark:bg-slate-900/80 p-1.5 rounded-2xl flex gap-1 border border-slate-300/30">
+                    <button id="tabAllStocks" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                        All
+                    </button>
                     <button id="tabInStock" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white">
                         In Stock
                     </button>
@@ -106,7 +109,7 @@
 
             <!-- Horizontal Category Filter Bar -->
             <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto custom-scrollbar pb-2">
-                <button data-filter="all" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10">All</button>
+                <button data-filter="all" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10">All Categories</button>
                 <button data-filter="premium slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Premium Slices</button>
                 <button data-filter="regular slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Regular Slices</button>
                 <button data-filter="thick slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Thick Slices</button>
@@ -131,8 +134,6 @@
                             </tr>
                         </thead>
                         <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
-                            <!-- Loading Skeleton Rows -->
-                            <tr class="animate-pulse"><td class="p-4" colspan="3"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
                             <tr class="animate-pulse"><td class="p-4" colspan="3"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
                         </tbody>
                     </table>
@@ -181,7 +182,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbybZ66QUocgWFufPsZOqUYejy_slh32j3hNwGXfG9kfw5_njsgH6ZpAotdIy-Pn58Fj/exec";
 
         let serverPayload = { stock: [], sales: [] };
-        let currentStatusTab = "instock"; 
+        let currentStatusTab = "instock"; // options: "all", "instock", "soldout"
         let currentCategoryFilter = "all";
         let searchQuery = "";
 
@@ -193,6 +194,7 @@
         const topSellerName = document.getElementById('topSellerName');
         const downloadBtn = document.getElementById('downloadBtn');
         const searchInput = document.getElementById('searchInput');
+        const tabAllStocks = document.getElementById('tabAllStocks');
         const tabInStock = document.getElementById('tabInStock');
         const tabSoldOut = document.getElementById('tabSoldOut');
         const filterBtns = document.querySelectorAll('.filter-btn');
@@ -217,17 +219,31 @@
             }
         });
 
+        // Function to clean all tabs styling
+        function clearTabStyles() {
+            [tabAllStocks, tabInStock, tabSoldOut].forEach(tab => {
+                tab.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            });
+        }
+
+        tabAllStocks.addEventListener('click', () => {
+            currentStatusTab = "all";
+            clearTabStyles();
+            tabAllStocks.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-indigo-600 dark:text-white";
+            renderStockMetrics();
+        });
+
         tabInStock.addEventListener('click', () => {
             currentStatusTab = "instock";
+            clearTabStyles();
             tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
-            tabSoldOut.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
             renderStockMetrics();
         });
 
         tabSoldOut.addEventListener('click', () => {
             currentStatusTab = "soldout";
+            clearTabStyles();
             tabSoldOut.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white";
-            tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
             renderStockMetrics();
         });
 
