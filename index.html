@@ -15,7 +15,7 @@
                         brand: { dark: '#0b0f19', cardDark: '#131c2e', light: '#f4f7fe', cardLight: '#ffffff' }
                     },
                     animation: {
-                        'neon-glow': 'neonBg 4s ease infinite',
+                        'neon-glow': 'neonBg 6s linear infinite',
                     },
                     keyframes: {
                         neonBg: {
@@ -36,12 +36,17 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
         
-        /* Gemini Neon Border Glow Utility styling */
-        .gemini-glow-focus:focus-within {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #10b981);
-            background-size: 300% 300%;
-            animation: neonBg 3s ease infinite;
+        /* Gemini Neon Border Glow Setup */
+        .gemini-glow-container {
+            position: relative;
+            border-radius: 1rem;
             padding: 2px;
+            background: linear-gradient(90s, #3b82f6, #8b5cf6, #ec4899, #10b981, #3b82f6);
+            background-size: 400% 400%;
+        }
+        .gemini-glow-container:focus-within {
+            animation: neonBg 4s linear infinite;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
         }
     </style>
 </head>
@@ -72,56 +77,52 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
-        <!-- SEARCH & FILTERS CONTROLS CONTAINER -->
-        <section class="space-y-6">
-            <!-- Gemini Border Glow Search Component Wrapper -->
-            <div class="max-w-xl mx-auto rounded-2xl transition-all duration-300 gemini-glow-focus bg-slate-200 dark:bg-slate-800">
-                <div class="flex items-center gap-3 bg-white dark:bg-slate-900 px-4 py-3.5 rounded-[14px] w-full">
-                    <i data-lucide="search" class="text-slate-400 w-5 h-5"></i>
-                    <input type="text" id="searchInput" placeholder="search fish name and press enter" class="bg-transparent border-none text-sm focus:outline-none w-full text-slate-800 dark:text-slate-100 placeholder-slate-400 font-medium">
+        <!-- SEARCH & INTERACTIVE FILTER SUITE -->
+        <div class="space-y-6">
+            <!-- Gemini Neon Effect Search Bar Wrapper -->
+            <div class="max-w-2xl mx-auto">
+                <div class="gemini-glow-container transition-all duration-300">
+                    <div class="flex items-center bg-white dark:bg-slate-900 rounded-[14px] px-4 py-3">
+                        <i data-lucide="search" class="text-slate-400 mr-3 w-5 h-5"></i>
+                        <input type="text" id="searchInput" placeholder="search fish name and press enter" 
+                               class="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none font-medium text-base">
+                    </div>
                 </div>
             </div>
 
-            <!-- Dynamic Category Filters Navigation Row -->
-            <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 max-w-7xl">
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-blue-600 text-white border-blue-600 shadow-sm" data-category="all">All</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="premium slices">Premium Slices</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="regular slices">Regular Slices</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="thick slices">Thick Slices</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="cleaned whole fish">Cleaned Whole Fish</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="fillets">Fillets</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="curry cuts">Curry Cuts</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="prawns">Prawns</button>
-                <button class="filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50" data-category="crabs">Crabs</button>
+            <!-- Main Split Status Tabs (In Stock vs Sold Out) -->
+            <div class="flex justify-center">
+                <div class="bg-slate-200/60 dark:bg-slate-900/80 p-1.5 rounded-2xl flex gap-1 border border-slate-300/30">
+                    <button id="tabInStock" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white">
+                        In Stock
+                    </button>
+                    <button id="tabSoldOut" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                        Sold Out
+                    </button>
+                </div>
             </div>
-        </section>
 
-        <!-- SECTION 1: LIVE INVENTORY - COMPACT LIST VIEW -->
+            <!-- Horizontal Category Filter Bar -->
+            <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto custom-scrollbar pb-2">
+                <button data-filter="all" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10">All</button>
+                <button data-filter="premium slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Premium Slices</button>
+                <button data-filter="regular slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Regular Slices</button>
+                <button data-filter="thick slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Thick Slices</button>
+                <button data-filter="cleaned whole fish" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Cleaned Whole Fish</button>
+                <button data-filter="fillets" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Fillets</button>
+                <button data-filter="curry cuts" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Curry Cuts</button>
+                <button data-filter="prawns" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Prawns</button>
+                <button data-filter="crabs" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Crabs</button>
+            </div>
+        </div>
+
+        <!-- SECTION 1: LIVE INVENTORY CARDS -->
         <section>
-            <div class="mb-4">
-                <h2 class="text-xl font-bold tracking-tight">Master Inventory List</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Showing all indexed items grouped dynamically</p>
-            </div>
-
-            <!-- Premium Container Table for List View -->
-            <div class="overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl shadow-sm">
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 dark:bg-slate-900/30 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase border-b border-slate-200/60 dark:border-slate-800/60">
-                                <th class="p-4">Status Indication</th>
-                                <th class="p-4">Fish Product Variety</th>
-                                <th class="p-4 text-right">Available Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-sm">
-                            <!-- Pre-load Skeleton Row State -->
-                            <tr class="animate-pulse"><td colspan="3" class="p-6 text-center text-slate-400">Synchronizing live stock parameters...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div id="stockContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
+                <div class="animate-pulse bg-brand-cardLight dark:bg-brand-cardDark p-6 rounded-2xl h-36 border border-slate-200 dark:border-slate-800"></div>
             </div>
         </section>
 
@@ -166,110 +167,125 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbybZ66QUocgWFufPsZOqUYejy_slh32j3hNwGXfG9kfw5_njsgH6ZpAotdIy-Pn58Fj/exec";
 
         let serverPayload = { stock: [], sales: [] };
-        let currentActiveCategory = "all";
-        let searchString = "";
+        let currentStatusTab = "instock"; // or "soldout"
+        let currentCategoryFilter = "all";
+        let searchQuery = "";
 
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const stockListBody = document.getElementById('stockListBody');
+        const stockContainer = document.getElementById('stockContainer');
         const salesTableBody = document.getElementById('salesTableBody');
         const topSellerBadge = document.getElementById('topSellerBadge');
         const topSellerName = document.getElementById('topSellerName');
         const downloadBtn = document.getElementById('downloadBtn');
         const searchInput = document.getElementById('searchInput');
-        const filterTabs = document.querySelectorAll('.filter-tab');
+        const tabInStock = document.getElementById('tabInStock');
+        const tabSoldOut = document.getElementById('tabSoldOut');
+        const filterBtns = document.querySelectorAll('.filter-btn');
 
+        // Theme management switching module
         themeToggle.addEventListener('click', () => {
             if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                document.documentElement.classList.add('light');
+                document.documentElement.classList.replace('dark', 'light');
                 localStorage.setItem('theme', 'light');
                 themeIcon.setAttribute('data-lucide', 'moon');
             } else {
-                document.documentElement.classList.remove('light');
-                document.documentElement.classList.add('dark');
+                document.documentElement.classList.replace('light', 'dark');
                 localStorage.setItem('theme', 'dark');
                 themeIcon.setAttribute('data-lucide', 'sun');
             }
             lucide.createIcons();
         });
 
+        // Search engine key capture
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                searchQuery = searchInput.value.trim().toLowerCase();
+                renderStockMetrics();
+            }
+        });
+
+        // Split Tab Toggles
+        tabInStock.addEventListener('click', () => {
+            currentStatusTab = "instock";
+            tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
+            tabSoldOut.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            renderStockMetrics();
+        });
+
+        tabSoldOut.addEventListener('click', () => {
+            currentStatusTab = "soldout";
+            tabSoldOut.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white";
+            tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            renderStockMetrics();
+        });
+
+        // Category Filter Management Engine
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.className = "filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300");
+                btn.className = "filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10";
+                currentCategoryFilter = btn.getAttribute('data-filter');
+                renderStockMetrics();
+            });
+        });
+
         async function fetchSpreadsheetContext() {
             try {
                 const queryStream = await fetch(API_URL);
                 serverPayload = await queryStream.json();
-                renderStockMetricsList();
+                renderStockMetrics();
                 renderSalesMetrics();
             } catch (err) {
                 console.error("Connection error with Google Spreadsheet:", err);
             }
         }
 
-        // Search engine triggers when user inputs text and presses enter
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                searchString = searchInput.value.toLowerCase().trim();
-                renderStockMetricsList();
-            }
-        });
-
-        // Filter engine execution logic
-        filterTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                filterTabs.forEach(t => {
-                    t.className = "filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50";
-                });
-                tab.className = "filter-tab px-4 py-2 text-xs font-bold rounded-full border transition-all shrink-0 bg-blue-600 text-white border-blue-600 shadow-sm";
-                currentActiveCategory = tab.getAttribute('data-category');
-                renderStockMetricsList();
-            });
-        });
-
-        // Render List layout using custom filters & search parameters
-        function renderStockMetricsList() {
-            stockListBody.innerHTML = '';
+        function renderStockMetrics() {
+            stockContainer.innerHTML = '';
             
-            const filteredArray = serverPayload.stock.filter(fish => {
-                const fishNameLower = fish.name.toLowerCase();
-                const matchesSearch = fishNameLower.includes(searchString);
+            // Core processing matching dynamic multi-layered rules
+            const filteredStock = serverPayload.stock.filter(fish => {
+                const normalizedName = fish.name.toLowerCase();
+                const normalizedStatus = fish.status.toLowerCase();
+                const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
                 
-                let matchesCategory = false;
-                if (currentActiveCategory === "all") {
-                    matchesCategory = true;
-                } else {
-                    matchesCategory = fishNameLower.includes(currentActiveCategory);
-                }
-                
-                return matchesSearch && matchesCategory;
+                // 1. Availability validation layer
+                if (currentStatusTab === "instock" && isItemOut) return false;
+                if (currentStatusTab === "soldout" && !isItemOut) return false;
+
+                // 2. Text Search Input layer
+                if (searchQuery && !normalizedName.includes(searchQuery)) return false;
+
+                // 3. Category Filter layer
+                if (currentCategoryFilter !== "all" && !normalizedName.includes(currentCategoryFilter)) return false;
+
+                return true;
             });
 
-            if (filteredArray.length === 0) {
-                stockListBody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">No fish items found matching your filters.</td></tr>`;
+            if(filteredStock.length === 0) {
+                stockContainer.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium bg-white dark:bg-slate-900/40 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">No matching variant configurations discovered in this filter tab.</div>`;
                 return;
             }
 
-            filteredArray.forEach(fish => {
-                const normalizedStatus = fish.status.toLowerCase();
-                const isOut = normalizedStatus.includes('out') || fish.kg <= 0;
+            filteredStock.forEach(fish => {
+                const isOut = fish.kg <= 0 || fish.status.toLowerCase().includes('out');
+                const cardNode = document.createElement('div');
+                cardNode.className = `p-5 rounded-2xl border bg-brand-cardLight dark:bg-brand-cardDark transition-all duration-300 hover:shadow-lg ${isOut ? 'border-red-200/70 dark:border-red-950/70 bg-red-50/10' : 'border-slate-200/80 dark:border-slate-800/80'}`;
                 
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-all border-b border-slate-100 dark:border-slate-800/40";
-                
-                tr.innerHTML = `
-                    <td class="p-4 w-44">
-                        <span class="inline-flex items-center gap-2 font-bold px-3 py-1 rounded-full text-xs ${isOut ? 'bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400'}">
-                            <span class="h-2 w-2 rounded-full ${isOut ? 'bg-red-500 shadow-sm' : 'bg-emerald-500 shadow-sm'}"></span>
-                            ${isOut ? 'Sold Out' : 'Available'}
+                cardNode.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 leading-tight">${fish.name}</h3>
+                        <span class="flex h-2.5 w-2.5 shrink-0 rounded-full mt-1.5 ${isOut ? 'bg-red-500 shadow-md shadow-red-500/50' : 'bg-emerald-500 shadow-md shadow-emerald-500/50'}"></span>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium font-mono uppercase">Data Stream</span>
+                        <span class="text-sm font-bold tracking-tight ${isOut ? 'text-red-500 uppercase tracking-wide' : 'text-emerald-500'}">
+                            ${isOut ? 'SOLD OUT' : `${fish.kg.toFixed(2)} kg Available`}
                         </span>
-                    </td>
-                    <td class="p-4 font-semibold text-slate-800 dark:text-slate-200 tracking-tight">
-                        ${fish.name}
-                    </td>
-                    <td class="p-4 text-right font-mono font-bold ${isOut ? 'text-red-500 line-through opacity-60' : 'text-slate-900 dark:text-slate-100'}">
-                        ${isOut ? '0.00 kg' : `${fish.kg.toFixed(2)} kg`}
-                    </td>
+                    </div>
                 `;
-                stockListBody.appendChild(tr);
+                stockContainer.appendChild(cardNode);
             });
         }
 
@@ -300,7 +316,9 @@
                 tr.className = `hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors ${isLeader ? 'bg-amber-500/5 font-semibold text-amber-900 dark:text-amber-300' : ''}`;
                 tr.innerHTML = `
                     <td class="p-4 text-slate-400 font-mono font-medium text-xs">${row.week}</td>
-                    <td class="p-4 font-medium text-slate-800 dark:text-slate-200">${row.name} ${isLeader ? '👑' : ''}</td>
+                    <td class="p-4 font-medium text-slate-800 dark:text-slate-200">
+                        ${row.name} ${isLeader ? '👑' : ''}
+                    </td>
                     <td class="p-4 text-right font-mono font-bold text-blue-600 dark:text-blue-400">${row.kg.toFixed(2)} kg</td>
                 `;
                 salesTableBody.appendChild(tr);
