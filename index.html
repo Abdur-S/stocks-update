@@ -10,7 +10,7 @@
     <!-- 3D Icon Assets for Browser Tab (Favicon) & Search Lookups -->
     <link rel="icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
     <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
-    <link class="apple-touch-icon" href="https://img.icons8.com/3d-fluency/180/fish.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/3d-fluency/180/fish.png">
 
     <!-- Social Media Meta Tags -->
     <meta property="og:title" content="TruSea Fish Stocks Update">
@@ -163,7 +163,7 @@
                 </div>
             </div>
 
-            <!-- Main Data Table Container Layout -->
+            <!-- Main Data Table Container Layout with Price Column -->
             <div id="stockCaptureArea" class="bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm overflow-hidden p-1">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse">
@@ -171,11 +171,12 @@
                             <tr class="bg-slate-50 dark:bg-slate-900/60 text-slate-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
                                 <th class="p-4 w-12 text-center">Status</th>
                                 <th class="p-4">Fish Product Name</th>
+                                <th class="p-4 text-center">Price / kg</th>
                                 <th class="p-4 text-right pr-6">Available Stock</th>
                             </tr>
                         </thead>
                         <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
-                            <tr class="animate-pulse"><td class="p-4" colspan="3"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
+                            <tr class="animate-pulse"><td class="p-4" colspan="4"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -184,7 +185,7 @@
     </main>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbybZ66QUocgWFufPsZOqUYejy_slh32j3hNwGXfG9kfw5_njsgH6ZpAotdIy-Pn58Fj/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxO53P6cNhu3OeI5mumee8-DfRk7o1AZ1cbYM-7DZ87bBTJww-7nWx9dNcOqmElBXYB/exec";
 
         let serverPayload = { stock: [], sales: [] };
         let currentStatusTab = "instock"; 
@@ -223,7 +224,7 @@
             lucide.createIcons();
         });
 
-        // Real-time Live filtering engine. No enter key required at all!
+        // Real-time Live filtering engine
         searchInput.addEventListener('input', () => {
             searchQuery = searchInput.value.trim().toLowerCase();
             renderStockMetrics();
@@ -309,12 +310,14 @@
             });
 
             if(runningStockContext.length === 0) {
-                stockListBody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400 font-medium">No matching items located.</td></tr>`;
+                stockListBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium">No matching items located.</td></tr>`;
                 return;
             }
 
             runningStockContext.forEach(fish => {
                 const isOut = fish.kg <= 0 || fish.status.toLowerCase().includes('out');
+                const priceFormatted = fish.price && fish.price > 0 ? `₹${fish.price.toLocaleString('en-IN')}` : '-';
+                
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/50";
                 
@@ -324,6 +327,11 @@
                     </td>
                     <td class="p-4 font-semibold text-slate-700 dark:text-slate-200 tracking-tight">
                         ${fish.name}
+                    </td>
+                    <td class="p-4 text-center font-bold text-slate-800 dark:text-slate-200">
+                        <span class="inline-block bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-lg border border-blue-200/50 dark:border-blue-800/50 text-xs font-mono">
+                            ${priceFormatted} <span class="text-[10px] opacity-70">/ kg</span>
+                        </span>
                     </td>
                     <td class="p-4 text-right pr-6 font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-xs' : 'text-emerald-500'}">
                         ${isOut ? 'Sold Out' : `${fish.kg.toFixed(2)} kg`}
@@ -339,10 +347,11 @@
             const fileSaveName = `TruSea_Updated_Fish_Stocks_As_of_${dynamicDate.replace(/ /g, "_")}`;
 
             if (type === 'excel') {
-                let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Available Stock (kg)\n`;
+                let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Price per kg (₹),Available Stock (kg)\n`;
                 runningStockContext.forEach(fish => {
                     const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : "IN STOCK";
-                    csvContent += `"${fish.name}",${status},${fish.kg.toFixed(2)}\n`;
+                    const priceVal = fish.price ? fish.price : 0;
+                    csvContent += `"${fish.name}",${status},${priceVal},${fish.kg.toFixed(2)}\n`;
                 });
                 const link = document.createElement("a");
                 link.setAttribute("href", encodeURI(csvContent));
@@ -363,6 +372,7 @@
                 let y = 32;
                 doc.setFont("helvetica", "bold");
                 doc.text("Product Description", 15, y);
+                doc.text("Price / kg", 125, y);
                 doc.text("Available (kg)", 165, y);
                 doc.line(14, y+2, 195, y+2);
                 y += 8;
@@ -371,7 +381,9 @@
                 runningStockContext.forEach(fish => {
                     if (y > 275) { doc.addPage(); y = 20; }
                     const displayWeight = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
+                    const displayPrice = fish.price ? `Rs. ${fish.price}` : "-";
                     doc.text(fish.name, 15, y);
+                    doc.text(displayPrice, 125, y);
                     doc.text(displayWeight, 165, y);
                     y += 7;
                 });
@@ -392,7 +404,8 @@
                 txtContent += "=".repeat(documentHeading.length) + "\n\n";
                 runningStockContext.forEach((fish, index) => {
                     const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg Available`;
-                    txtContent += `${index + 1}. ${fish.name.padEnd(50)} : ${status}\n`;
+                    const priceVal = fish.price ? `₹${fish.price}/kg` : "-/kg";
+                    txtContent += `${index + 1}. ${fish.name.padEnd(45)} : ${priceVal.padEnd(12)} | ${status}\n`;
                 });
                 const blob = new Blob([txtContent], { type: "text/plain;charset=utf-8" });
                 const link = document.createElement("a");
