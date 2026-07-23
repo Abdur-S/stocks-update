@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/3d-fluency/180/fish.png">
     <meta name="theme-color" content="#2563eb">
 
-    <!-- Open Graph / Social Media Meta Tags (WhatsApp, Insta, Facebook, Telegram, LinkedIn) -->
+    <!-- Open Graph / Social Media Meta Tags (WhatsApp, Insta, Facebook, Telegram, X) -->
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="TruSea Seafood Inventory">
+    <meta property="og:site_name" content="TruSea Stocks Update">
     <meta property="og:title" content="TruSea Stocks Update">
     <meta property="og:description" content="Live Seafood Stock Levels (kg), Rates & Availability. Updated in real-time.">
     <meta property="og:image" content="https://img.icons8.com/3d-fluency/180/fish.png">
@@ -93,30 +93,29 @@
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen custom-scrollbar transition-colors duration-200">
 
-    <!-- Premium Sticky Glass Header -->
+    <!-- Premium Sticky Header with Full "TruSea Stocks Update" Title -->
     <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-brand-dark/85 border-b border-slate-200/80 dark:border-slate-800/80 px-3 sm:px-6 py-3.5 transition-all">
         <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
             
-            <!-- Brand & 3D Logo -->
-            <div class="flex items-center gap-2.5">
-                <img src="https://img.icons8.com/3d-fluency/94/fish.png" alt="TruSea 3D Logo" class="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-sm">
-                <div>
-                    <span class="text-lg sm:text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent">TruSea</span>
-                    <span class="hidden xs:inline-block text-xs uppercase tracking-widest font-bold text-slate-400 dark:text-slate-500 ml-1">Stocks</span>
-                </div>
+            <!-- Brand & 3D Logo Header -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <img src="https://img.icons8.com/3d-fluency/94/fish.png" alt="TruSea 3D Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm shrink-0">
+                <h1 class="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent whitespace-nowrap">
+                    TruSea Stocks Update
+                </h1>
             </div>
             
-            <!-- Sync Status Indicator & Theme Switcher -->
+            <!-- Live Sync Status & Theme Switcher -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <div class="flex items-center gap-1.5 sm:gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400 shrink-0">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    <span id="syncStatusText">Live Sync</span>
+                    <span id="syncStatusText" class="whitespace-nowrap">Live Sync</span>
                 </div>
                 
-                <button id="themeToggle" aria-label="Toggle Mode" class="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                <button id="themeToggle" aria-label="Toggle Mode" class="p-1.5 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all shrink-0">
                     <i id="themeIcon" data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
             </div>
@@ -129,7 +128,7 @@
         <!-- SEARCH & FILTER INTERACTION SUITE -->
         <div class="space-y-5">
             
-            <!-- Search Bar with Action Button (Fixes Mobile Keyboard View) -->
+            <!-- Search Bar with Mobile Action Button -->
             <form id="searchForm" onsubmit="executeSearch(event)" class="max-w-2xl mx-auto">
                 <div class="gemini-glow-container shadow-sm">
                     <div class="flex items-center bg-white dark:bg-slate-900 rounded-[18px] px-3.5 py-2 sm:py-2.5">
@@ -143,7 +142,7 @@
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                         
-                        <!-- Mobile Friendly Explicit Search Button -->
+                        <!-- Mobile-Friendly Explicit Search Button -->
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1 shadow-md shadow-blue-500/20">
                             <span>Search</span>
                         </button>
@@ -187,7 +186,7 @@
             <!-- Table Header Bar & Download Dropdown -->
             <div class="flex items-center justify-between flex-wrap gap-2 px-1">
                 <div>
-                    <h2 id="renderedHeaderTitle" class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">TruSea Live Inventory</h2>
+                    <h2 id="renderedHeaderTitle" class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">TruSea Updated Fish Stocks</h2>
                     <p id="itemCountSubtext" class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Fetching stock list...</p>
                 </div>
                 
@@ -246,7 +245,6 @@
         let currentCategoryFilter = "all";
         let searchQuery = "";
         let runningStockContext = [];
-        let lastSyncTime = null;
 
         // Element Handles
         const themeToggle = document.getElementById('themeToggle');
@@ -300,18 +298,16 @@
             renderStockMetrics();
         }
 
-        // Mobile Form Search Execution (Fixes Mobile Keyboard View)
+        // Mobile Form Search Execution
         function executeSearch(e) {
             e.preventDefault();
             searchQuery = searchInput.value.trim().toLowerCase();
             renderStockMetrics();
             
-            // Explicitly dismiss mobile soft keyboard
             if (document.activeElement) {
                 document.activeElement.blur();
             }
 
-            // Smooth scroll to table view
             const targetSection = document.getElementById('inventorySection');
             if (targetSection) {
                 targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -380,7 +376,6 @@
                 
                 if (freshData && freshData.stock) {
                     serverPayload = freshData;
-                    lastSyncTime = new Date();
                     syncStatusText.innerText = "Synced Just Now";
                     renderStockMetrics();
                 }
@@ -540,10 +535,7 @@
             }
             lucide.createIcons();
             
-            // Initial fetch
             fetchSpreadsheetContext();
-            
-            // Automatic instant background re-polling loop every 10 seconds
             setInterval(fetchSpreadsheetContext, 10000);
         });
     </script>
