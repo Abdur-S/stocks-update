@@ -2,26 +2,35 @@
 <html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- Premium Browser Tab Title Configuration -->
+    <!-- Primary Page Title -->
     <title>TruSea Stocks Update</title>
+    <meta name="title" content="TruSea Stocks Update">
+    <meta name="description" content="Live Real-Time Seafood Inventory & Stock Management Ledger for TruSea. Updated continuously.">
 
-    <!-- 3D Icon Assets for Browser Tab (Favicon) & Search Lookups -->
-    <link rel="icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
+    <!-- 3D Icon Assets for Browser Tabs & Favicon -->
+    <link rel="icon" type="image/png" sizes="96x96" href="https://img.icons8.com/3d-fluency/94/fish.png">
     <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/3d-fluency/94/fish.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/3d-fluency/180/fish.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/3d-fluency/180/fish.png">
+    <meta name="theme-color" content="#2563eb">
 
-    <!-- Social Media Meta Tags -->
-    <meta property="og:title" content="TruSea Fish Stocks Update">
-    <meta property="og:description" content="Real-time premium inventory control ledger. Updated live from main distribution center.">
+    <!-- Open Graph / Social Media Meta Tags (WhatsApp, Insta, Facebook, Telegram, LinkedIn) -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TruSea Seafood Inventory">
+    <meta property="og:title" content="TruSea Stocks Update">
+    <meta property="og:description" content="Live Seafood Stock Levels (kg), Rates & Availability. Updated in real-time.">
     <meta property="og:image" content="https://img.icons8.com/3d-fluency/180/fish.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="TruSea Fish Stocks Update">
+    <meta property="og:image:width" content="180">
+    <meta property="og:image:height" content="180">
+
+    <!-- Twitter / X Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="TruSea Stocks Update">
+    <meta name="twitter:description" content="Live Seafood Inventory & Rate Sheet.">
     <meta name="twitter:image" content="https://img.icons8.com/3d-fluency/180/fish.png">
 
-    <!-- Premium Tailwind Stylesheet -->
+    <!-- Premium Tailwind CSS Framework -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,10 +38,16 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: { dark: '#0b0f19', cardDark: '#131c2e', light: '#f4f7fe', cardLight: '#ffffff' }
+                        brand: { 
+                            dark: '#080c14', 
+                            cardDark: '#111827', 
+                            light: '#f8fafc', 
+                            cardLight: '#ffffff',
+                            accent: '#2563eb'
+                        }
                     },
                     animation: {
-                        'neon-glow': 'neonBg 6s linear infinite',
+                        'neon-glow': 'neonBg 5s linear infinite',
                     },
                     keyframes: {
                         neonBg: {
@@ -44,139 +59,177 @@
             }
         }
     </script>
-    <!-- Lucide Vector Icons Engine -->
+    <!-- Vector Icons Engine -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- PDF & Capture Engines -->
+    <!-- PDF & Capture Utilities -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.25s, color 0.25s; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
-        /* Gemini Neon Border Glow Setup */
+        .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Gemini Neon Border Glow Effect */
         .gemini-glow-container {
             position: relative;
-            border-radius: 1rem;
+            border-radius: 1.25rem;
             padding: 2px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #10b981, #3b82f6);
-            background-size: 400% 400%;
+            background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777, #059669, #2563eb);
+            background-size: 300% 300%;
+            transition: all 0.3s ease;
         }
         .gemini-glow-container:focus-within {
             animation: neonBg 4s linear infinite;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.25);
         }
     </style>
 </head>
-<body class="bg-brand-light text-slate-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen custom-scrollbar">
+<body class="bg-slate-50 text-slate-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen custom-scrollbar transition-colors duration-200">
 
-    <!-- Premium Navigation Menu bar -->
-    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-brand-dark/70 border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-4 transition-all">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <img src="https://img.icons8.com/3d-fluency/94/fish.png" alt="TruSea 3D Logo" class="w-10 h-10 object-contain">
-                <span class="text-xl font-black tracking-tight bg-gradient-to-r from-blue-500 to-emerald-400 bg-clip-text text-transparent">TruSea Analytics</span>
+    <!-- Premium Sticky Glass Header -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-brand-dark/85 border-b border-slate-200/80 dark:border-slate-800/80 px-3 sm:px-6 py-3.5 transition-all">
+        <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
+            
+            <!-- Brand & 3D Logo -->
+            <div class="flex items-center gap-2.5">
+                <img src="https://img.icons8.com/3d-fluency/94/fish.png" alt="TruSea 3D Logo" class="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-sm">
+                <div>
+                    <span class="text-lg sm:text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent">TruSea</span>
+                    <span class="hidden xs:inline-block text-xs uppercase tracking-widest font-bold text-slate-400 dark:text-slate-500 ml-1">Stocks</span>
+                </div>
             </div>
             
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+            <!-- Sync Status Indicator & Theme Switcher -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    Live Syncing
+                    <span id="syncStatusText">Live Sync</span>
                 </div>
-                <button id="themeToggle" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all shadow-sm">
-                    <i id="themeIcon" data-lucide="moon"></i>
+                
+                <button id="themeToggle" aria-label="Toggle Mode" class="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                    <i id="themeIcon" data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+    <!-- Main Application Container -->
+    <main class="max-w-6xl mx-auto px-3 sm:px-6 py-6 space-y-6">
         
-        <!-- SEARCH & INTERACTIVE FILTER SUITE -->
-        <div class="space-y-6">
-            <!-- Gemini Neon Effect Search Bar Wrapper -->
-            <div class="max-w-2xl mx-auto">
-                <div class="gemini-glow-container transition-all duration-300">
-                    <div class="flex items-center bg-white dark:bg-slate-900 rounded-[14px] px-4 py-3">
-                        <i data-lucide="search" class="text-slate-400 mr-3 w-5 h-5"></i>
+        <!-- SEARCH & FILTER INTERACTION SUITE -->
+        <div class="space-y-5">
+            
+            <!-- Search Bar with Action Button (Fixes Mobile Keyboard View) -->
+            <form id="searchForm" onsubmit="executeSearch(event)" class="max-w-2xl mx-auto">
+                <div class="gemini-glow-container shadow-sm">
+                    <div class="flex items-center bg-white dark:bg-slate-900 rounded-[18px] px-3.5 py-2 sm:py-2.5">
+                        <i data-lucide="search" class="text-slate-400 mr-2.5 w-5 h-5 shrink-0"></i>
+                        
                         <input type="text" id="searchInput" placeholder="Search fish name..." 
-                               class="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none font-medium text-base">
+                               class="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none font-medium text-sm sm:text-base py-1">
+                        
+                        <!-- Clear Button -->
+                        <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden p-1 mr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                        
+                        <!-- Mobile Friendly Explicit Search Button -->
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1 shadow-md shadow-blue-500/20">
+                            <span>Search</span>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </form>
 
-            <!-- Main Split Status Tabs (All, In Stock, Sold Out) -->
+            <!-- Status Split Tabs (All, In Stock, Sold Out) -->
             <div class="flex justify-center">
-                <div class="bg-slate-200/60 dark:bg-slate-900/80 p-1.5 rounded-2xl flex gap-1 border border-slate-300/30">
-                    <button id="tabAllStocks" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                <div class="bg-slate-200/70 dark:bg-slate-900/90 p-1 rounded-2xl flex gap-1 border border-slate-300/40 dark:border-slate-800">
+                    <button id="tabAllStocks" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
                         All
                     </button>
-                    <button id="tabInStock" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white">
+                    <button id="tabInStock" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white">
                         In Stock
                     </button>
-                    <button id="tabSoldOut" class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                    <button id="tabSoldOut" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
                         Sold Out
                     </button>
                 </div>
             </div>
 
-            <!-- Horizontal Category Filter Bar -->
-            <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto custom-scrollbar pb-2">
-                <button data-filter="all" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10">All Categories</button>
-                <button data-filter="premium slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Premium Slices</button>
-                <button data-filter="regular slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Regular Slices</button>
-                <button data-filter="thick slices" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Thick Slices</button>
-                <button data-filter="cleaned whole fish" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Cleaned Whole Fish</button>
-                <button data-filter="fillets" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Fillets</button>
-                <button data-filter="curry cuts" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Curry Cuts</button>
-                <button data-filter="cubes" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Cubes</button>
-                <button data-filter="prawns" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Prawns</button>
-                <button data-filter="crabs" class="filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Crabs</button>
+            <!-- Category Pills Bar -->
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 px-1">
+                <button data-filter="all" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/15">All Categories</button>
+                <button data-filter="premium slices" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Premium Slices</button>
+                <button data-filter="regular slices" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Regular Slices</button>
+                <button data-filter="thick slices" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Thick Slices</button>
+                <button data-filter="cleaned whole fish" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Cleaned Whole Fish</button>
+                <button data-filter="fillets" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Fillets</button>
+                <button data-filter="curry cuts" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Curry Cuts</button>
+                <button data-filter="cubes" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Cubes</button>
+                <button data-filter="prawns" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Prawns</button>
+                <button data-filter="crabs" class="filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300">Crabs</button>
             </div>
         </div>
 
-        <!-- LIVE INVENTORY WRAPPER WITH DROPDOWN EXPORT ENGINE -->
-        <section class="space-y-4">
-            <div class="flex items-center justify-between flex-wrap gap-3 px-1">
-                <span id="renderedHeaderTitle" class="text-base font-black text-slate-800 dark:text-slate-200 tracking-tight">TruSea Live Inventory</span>
+        <!-- LIVE INVENTORY SECTION -->
+        <section id="inventorySection" class="space-y-3.5">
+            
+            <!-- Table Header Bar & Download Dropdown -->
+            <div class="flex items-center justify-between flex-wrap gap-2 px-1">
+                <div>
+                    <h2 id="renderedHeaderTitle" class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">TruSea Live Inventory</h2>
+                    <p id="itemCountSubtext" class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Fetching stock list...</p>
+                </div>
                 
-                <!-- Unified "Download As" Action Button -->
+                <!-- "Download As" Menu Button -->
                 <div class="relative inline-block text-left">
-                    <button id="dropdownToggleBtn" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-md text-sm active:scale-95">
-                        <i data-lucide="download" class="w-4 h-4"></i> Download As <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    <button id="dropdownToggleBtn" class="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-500/15 text-xs sm:text-sm active:scale-95">
+                        <i data-lucide="download" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Download As <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                     </button>
 
-                    <!-- Target Selection Menu Overlay -->
-                    <div id="exportDropdownMenu" class="hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white dark:bg-brand-cardDark border border-slate-200 dark:border-slate-800 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
+                    <!-- Target Export Menu -->
+                    <div id="exportDropdownMenu" class="hidden absolute right-0 mt-2 w-44 rounded-2xl bg-white dark:bg-brand-cardDark border border-slate-200 dark:border-slate-800 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
                         <div class="py-1 font-semibold text-xs text-slate-700 dark:text-slate-300 divide-y divide-slate-100 dark:divide-slate-800">
-                            <button onclick="runExport('txt')" class="flex items-center gap-3 w-full px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file" class="w-4 h-4 text-amber-500"></i> .txt</button>
-                            <button onclick="runExport('pdf')" class="flex items-center gap-3 w-full px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file-text" class="w-4 h-4 text-red-500"></i> .pdf</button>
-                            <button onclick="runExport('excel')" class="flex items-center gap-3 w-full px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-500"></i> excel</button>
-                            <button onclick="runExport('png')" class="flex items-center gap-3 w-full px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="image" class="w-4 h-4 text-blue-500"></i> png image</button>
+                            <button onclick="runExport('txt')" class="flex items-center gap-2.5 w-full px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file" class="w-4 h-4 text-amber-500"></i> .txt File</button>
+                            <button onclick="runExport('pdf')" class="flex items-center gap-2.5 w-full px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file-text" class="w-4 h-4 text-red-500"></i> .pdf Document</button>
+                            <button onclick="runExport('excel')" class="flex items-center gap-2.5 w-full px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-500"></i> Excel (.csv)</button>
+                            <button onclick="runExport('png')" class="flex items-center gap-2.5 w-full px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900 text-left transition-colors"><i data-lucide="image" class="w-4 h-4 text-blue-500"></i> PNG Image</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Data Table Container Layout with Price Column -->
-            <div id="stockCaptureArea" class="bg-brand-cardLight dark:bg-brand-cardDark rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm overflow-hidden p-1">
+            <!-- Responsive Clean Stock Table -->
+            <div id="stockCaptureArea" class="bg-white dark:bg-brand-cardDark rounded-2xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 dark:bg-slate-900/60 text-slate-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                                <th class="p-4 w-12 text-center">Status</th>
-                                <th class="p-4">Fish Product Name</th>
-                                <th class="p-4 text-center">Price / kg</th>
-                                <th class="p-4 text-right pr-6">Available Stock</th>
+                            <tr class="bg-slate-50/90 dark:bg-slate-900/80 text-slate-400 dark:text-slate-400 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
+                                <th class="py-3 px-3 w-10 text-center">Status</th>
+                                <th class="py-3 px-3 sm:px-4">Fish Product Name</th>
+                                <th class="py-3 px-2 sm:px-4 text-center w-28 sm:w-36">Rate / kg</th>
+                                <th class="py-3 px-3 sm:px-6 text-right w-28 sm:w-36">Available</th>
                             </tr>
                         </thead>
-                        <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
-                            <tr class="animate-pulse"><td class="p-4" colspan="4"><div class="h-5 bg-slate-200 dark:bg-slate-800 rounded"></div></td></tr>
+                        <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs sm:text-sm">
+                            <tr class="animate-pulse">
+                                <td class="p-4 text-center" colspan="4">
+                                    <div class="flex items-center justify-center gap-2 text-slate-400 py-4">
+                                        <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                                        <span class="font-medium">Connecting to TruSea Live Inventory...</span>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -185,18 +238,22 @@
     </main>
 
     <script>
+        // GOOGLE APPS SCRIPT API ENDPOINT
         const API_URL = "https://script.google.com/macros/s/AKfycbxO53P6cNhu3OeI5mumee8-DfRk7o1AZ1cbYM-7DZ87bBTJww-7nWx9dNcOqmElBXYB/exec";
 
-        let serverPayload = { stock: [], sales: [] };
+        let serverPayload = { stock: [] };
         let currentStatusTab = "instock"; 
         let currentCategoryFilter = "all";
         let searchQuery = "";
         let runningStockContext = [];
+        let lastSyncTime = null;
 
+        // Element Handles
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const stockListBody = document.getElementById('stockListBody');
         const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
         const tabAllStocks = document.getElementById('tabAllStocks');
         const tabInStock = document.getElementById('tabInStock');
         const tabSoldOut = document.getElementById('tabSoldOut');
@@ -204,13 +261,17 @@
         const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
         const exportDropdownMenu = document.getElementById('exportDropdownMenu');
         const renderedHeaderTitle = document.getElementById('renderedHeaderTitle');
+        const itemCountSubtext = document.getElementById('itemCountSubtext');
+        const syncStatusText = document.getElementById('syncStatusText');
 
+        // Toggle Export Dropdown
         dropdownToggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             exportDropdownMenu.classList.toggle('hidden');
         });
         document.addEventListener('click', () => exportDropdownMenu.classList.add('hidden'));
 
+        // Theme Engine
         themeToggle.addEventListener('click', () => {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.replace('dark', 'light');
@@ -224,48 +285,78 @@
             lucide.createIcons();
         });
 
-        // Real-time Live filtering engine
+        // Search Input Handlers
         searchInput.addEventListener('input', () => {
-            searchQuery = searchInput.value.trim().toLowerCase();
+            const val = searchInput.value.trim();
+            clearSearchBtn.classList.toggle('hidden', val === "");
+            searchQuery = val.toLowerCase();
             renderStockMetrics();
         });
 
+        function clearSearch() {
+            searchInput.value = "";
+            searchQuery = "";
+            clearSearchBtn.classList.add('hidden');
+            renderStockMetrics();
+        }
+
+        // Mobile Form Search Execution (Fixes Mobile Keyboard View)
+        function executeSearch(e) {
+            e.preventDefault();
+            searchQuery = searchInput.value.trim().toLowerCase();
+            renderStockMetrics();
+            
+            // Explicitly dismiss mobile soft keyboard
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+
+            // Smooth scroll to table view
+            const targetSection = document.getElementById('inventorySection');
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Tab Switching Logic
         function clearTabStyles() {
             [tabAllStocks, tabInStock, tabSoldOut].forEach(tab => {
-                tab.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+                tab.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
             });
         }
 
         tabAllStocks.addEventListener('click', () => {
             currentStatusTab = "all";
             clearTabStyles();
-            tabAllStocks.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-indigo-600 dark:text-white";
+            tabAllStocks.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-indigo-600 dark:text-white";
             renderStockMetrics();
         });
 
         tabInStock.addEventListener('click', () => {
             currentStatusTab = "instock";
             clearTabStyles();
-            tabInStock.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
+            tabInStock.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
             renderStockMetrics();
         });
 
         tabSoldOut.addEventListener('click', () => {
             currentStatusTab = "soldout";
             clearTabStyles();
-            tabSoldOut.className = "px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white";
+            tabSoldOut.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white";
             renderStockMetrics();
         });
 
+        // Category Filter Pills Handler
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.className = "filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300");
-                btn.className = "filter-btn shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/10";
+                filterBtns.forEach(b => b.className = "filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300");
+                btn.className = "filter-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-500/15";
                 currentCategoryFilter = btn.getAttribute('data-filter');
                 renderStockMetrics();
             });
         });
 
+        // Dynamic Date Formatter
         function getFormattedDateString() {
             const dateObj = new Date();
             const day = dateObj.getDate();
@@ -281,22 +372,31 @@
             return `${day}${suffix} ${monthName} ${year}`;
         }
 
+        // Fetch Live Context Engine
         async function fetchSpreadsheetContext() {
             try {
                 const queryStream = await fetch(API_URL);
-                serverPayload = await queryStream.json();
-                renderStockMetrics();
+                const freshData = await queryStream.json();
+                
+                if (freshData && freshData.stock) {
+                    serverPayload = freshData;
+                    lastSyncTime = new Date();
+                    syncStatusText.innerText = "Synced Just Now";
+                    renderStockMetrics();
+                }
             } catch (err) {
-                console.error("Connection error with Google Spreadsheet:", err);
+                console.error("Live fetch error from Google Spreadsheet:", err);
+                syncStatusText.innerText = "Live Syncing...";
             }
         }
 
+        // Render Table Rows
         function renderStockMetrics() {
             stockListBody.innerHTML = '';
             const dynamicDate = getFormattedDateString();
             renderedHeaderTitle.innerText = `TruSea Updated Fish Stocks As of ${dynamicDate}`;
             
-            runningStockContext = serverPayload.stock.filter(fish => {
+            runningStockContext = (serverPayload.stock || []).filter(fish => {
                 const normalizedName = fish.name.toLowerCase();
                 const normalizedStatus = fish.status.toLowerCase();
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
@@ -309,8 +409,17 @@
                 return true;
             });
 
+            itemCountSubtext.innerText = `Showing ${runningStockContext.length} item(s) in menu`;
+
             if(runningStockContext.length === 0) {
-                stockListBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium">No matching items located.</td></tr>`;
+                stockListBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-10 px-4 text-center text-slate-400 dark:text-slate-500 font-medium">
+                            <i data-lucide="package-x" class="w-8 h-8 mx-auto mb-2 opacity-60"></i>
+                            No matching fish items found for this selection.
+                        </td>
+                    </tr>`;
+                lucide.createIcons();
                 return;
             }
 
@@ -319,35 +428,37 @@
                 const priceFormatted = fish.price && fish.price > 0 ? `₹${fish.price.toLocaleString('en-IN')}` : '-';
                 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/50";
+                tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/60";
                 
                 tr.innerHTML = `
-                    <td class="p-4 text-center">
-                        <span class="inline-block h-2.5 w-2.5 rounded-full ${isOut ? 'bg-red-500 shadow-md shadow-red-500/40' : 'bg-emerald-500 shadow-md shadow-emerald-500/40'}"></span>
+                    <td class="py-3 px-3 text-center">
+                        <span class="inline-block h-2.5 w-2.5 rounded-full ${isOut ? 'bg-red-500 shadow-sm shadow-red-500/50' : 'bg-emerald-500 shadow-sm shadow-emerald-500/50'}"></span>
                     </td>
-                    <td class="p-4 font-semibold text-slate-700 dark:text-slate-200 tracking-tight">
+                    <td class="py-3 px-3 sm:px-4 font-bold text-slate-800 dark:text-slate-100 leading-snug">
                         ${fish.name}
                     </td>
-                    <td class="p-4 text-center font-bold text-slate-800 dark:text-slate-200">
-                        <span class="inline-block bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-lg border border-blue-200/50 dark:border-blue-800/50 text-xs font-mono">
-                            ${priceFormatted} <span class="text-[10px] opacity-70">/ kg</span>
+                    <td class="py-3 px-2 sm:px-4 text-center font-bold">
+                        <span class="inline-block bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-2 sm:px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60 text-[11px] sm:text-xs font-mono">
+                            ${priceFormatted} <span class="text-[9px] opacity-70">/kg</span>
                         </span>
                     </td>
-                    <td class="p-4 text-right pr-6 font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-xs' : 'text-emerald-500'}">
+                    <td class="py-3 px-3 sm:px-6 text-right font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-[11px] sm:text-xs' : 'text-emerald-600 dark:text-emerald-400'}">
                         ${isOut ? 'Sold Out' : `${fish.kg.toFixed(2)} kg`}
                     </td>
                 `;
                 stockListBody.appendChild(tr);
             });
+            lucide.createIcons();
         }
 
+        // Export Controller
         function runExport(type) {
             const dynamicDate = getFormattedDateString();
             const documentHeading = `TruSea Updated Fish Stocks As of ${dynamicDate}`;
             const fileSaveName = `TruSea_Updated_Fish_Stocks_As_of_${dynamicDate.replace(/ /g, "_")}`;
 
             if (type === 'excel') {
-                let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Price per kg (₹),Available Stock (kg)\n`;
+                let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Rate per kg (₹),Available Stock (kg)\n`;
                 runningStockContext.forEach(fish => {
                     const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : "IN STOCK";
                     const priceVal = fish.price ? fish.price : 0;
@@ -367,12 +478,12 @@
                 doc.text(documentHeading, 14, 16);
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "normal");
-                doc.text(`Manifest scope: ${currentStatusTab.toUpperCase()} filters`, 14, 23);
+                doc.text(`Manifest Scope: ${currentStatusTab.toUpperCase()} filters`, 14, 23);
                 
                 let y = 32;
                 doc.setFont("helvetica", "bold");
                 doc.text("Product Description", 15, y);
-                doc.text("Price / kg", 125, y);
+                doc.text("Rate / kg", 125, y);
                 doc.text("Available (kg)", 165, y);
                 doc.line(14, y+2, 195, y+2);
                 y += 8;
@@ -417,6 +528,7 @@
             }
         }
 
+        // Initialize and Schedule Polling
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             if (savedTheme === 'dark') {
@@ -427,8 +539,12 @@
                 themeIcon.setAttribute('data-lucide', 'moon');
             }
             lucide.createIcons();
+            
+            // Initial fetch
             fetchSpreadsheetContext();
-            setInterval(fetchSpreadsheetContext, 25000);
+            
+            // Automatic instant background re-polling loop every 10 seconds
+            setInterval(fetchSpreadsheetContext, 10000);
         });
     </script>
 </body>
