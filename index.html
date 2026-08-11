@@ -219,8 +219,8 @@
                             <tr id="tableHeaderRow" class="bg-slate-50/90 dark:bg-slate-900/80 text-slate-400 dark:text-slate-400 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
                                 <th class="col-status py-3 px-3 w-10 text-center">Status</th>
                                 <th class="py-3 px-3 sm:px-4">Fish Product Name</th>
-                                <th class="py-3 px-2 sm:px-4 text-center w-28 sm:w-36">Rate / kg</th>
-                                <th class="col-available py-3 px-3 sm:px-6 text-right w-28 sm:w-36">Available</th>
+                                <th class="col-rate py-3 px-2 sm:px-4 text-center w-28 sm:w-36">Rate / kg</th>
+                                <th class="py-3 px-3 sm:px-6 text-right w-28 sm:w-36">Available</th>
                             </tr>
                         </thead>
                         <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs sm:text-sm">
@@ -405,7 +405,7 @@
             const isOffersTab = currentStatusTab === "offers";
 
             // Toggle table headers based on active tab
-            document.querySelectorAll('.col-status, .col-available').forEach(el => {
+            document.querySelectorAll('.col-status, .col-rate').forEach(el => {
                 el.style.display = isOffersTab ? 'none' : '';
             });
 
@@ -458,15 +458,13 @@
                 tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/60";
                 
                 if (isOffersTab) {
-                    // Display only Product Name and Rate/kg for Offers
+                    // Display only Product Name and Available (in kg) for Offers
                     tr.innerHTML = `
                         <td class="py-3 px-3 sm:px-4 font-bold text-slate-800 dark:text-slate-100 leading-snug">
                             ${fish.name}
                         </td>
-                        <td class="py-3 px-2 sm:px-4 text-center font-bold">
-                            <span class="inline-block bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-2 sm:px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60 text-[11px] sm:text-xs font-mono">
-                                ${priceFormatted} <span class="text-[9px] opacity-70">/kg</span>
-                            </span>
+                        <td class="py-3 px-3 sm:px-6 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                            ${fish.kg.toFixed(2)} kg
                         </td>
                     `;
                 } else {
