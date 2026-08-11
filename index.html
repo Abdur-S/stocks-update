@@ -150,17 +150,20 @@
                 </div>
             </form>
 
-            <!-- Status Split Tabs (All, In Stock, Sold Out) -->
+            <!-- Status Split Tabs (All, In Stock, Sold Out, Fish Offers) -->
             <div class="flex justify-center">
-                <div class="bg-slate-200/70 dark:bg-slate-900/90 p-1 rounded-2xl flex gap-1 border border-slate-300/40 dark:border-slate-800">
-                    <button id="tabAllStocks" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                <div class="bg-slate-200/70 dark:bg-slate-900/90 p-1 rounded-2xl flex gap-1 border border-slate-300/40 dark:border-slate-800 overflow-x-auto no-scrollbar max-w-full">
+                    <button id="tabAllStocks" class="px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap">
                         All
                     </button>
-                    <button id="tabInStock" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white">
+                    <button id="tabInStock" class="px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white whitespace-nowrap">
                         In Stock
                     </button>
-                    <button id="tabSoldOut" class="px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
+                    <button id="tabSoldOut" class="px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap">
                         Sold Out
+                    </button>
+                    <button id="tabFishOffers" class="px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap">
+                        Fishes for Offers
                     </button>
                 </div>
             </div>
@@ -255,6 +258,7 @@
         const tabAllStocks = document.getElementById('tabAllStocks');
         const tabInStock = document.getElementById('tabInStock');
         const tabSoldOut = document.getElementById('tabSoldOut');
+        const tabFishOffers = document.getElementById('tabFishOffers');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
         const exportDropdownMenu = document.getElementById('exportDropdownMenu');
@@ -316,29 +320,36 @@
 
         // Tab Switching Logic
         function clearTabStyles() {
-            [tabAllStocks, tabInStock, tabSoldOut].forEach(tab => {
-                tab.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+            [tabAllStocks, tabInStock, tabSoldOut, tabFishOffers].forEach(tab => {
+                tab.className = "px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap";
             });
         }
 
         tabAllStocks.addEventListener('click', () => {
             currentStatusTab = "all";
             clearTabStyles();
-            tabAllStocks.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-indigo-600 dark:text-white";
+            tabAllStocks.className = "px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-indigo-600 dark:text-white whitespace-nowrap";
             renderStockMetrics();
         });
 
         tabInStock.addEventListener('click', () => {
             currentStatusTab = "instock";
             clearTabStyles();
-            tabInStock.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white";
+            tabInStock.className = "px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-blue-600 dark:text-white whitespace-nowrap";
             renderStockMetrics();
         });
 
         tabSoldOut.addEventListener('click', () => {
             currentStatusTab = "soldout";
             clearTabStyles();
-            tabSoldOut.className = "px-5 sm:px-7 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white";
+            tabSoldOut.className = "px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-red-500 dark:text-white whitespace-nowrap";
+            renderStockMetrics();
+        });
+
+        tabFishOffers.addEventListener('click', () => {
+            currentStatusTab = "offers";
+            clearTabStyles();
+            tabFishOffers.className = "px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm bg-white dark:bg-slate-800 text-amber-500 dark:text-white whitespace-nowrap";
             renderStockMetrics();
         });
 
@@ -395,9 +406,11 @@
                 const normalizedName = fish.name.toLowerCase();
                 const normalizedStatus = fish.status.toLowerCase();
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
+                const isOfferItem = fish.isOffer || fish.sheet === "Old Stocks" || fish.category === "Old Stocks" || normalizedStatus.includes('offer');
                 
                 if (currentStatusTab === "instock" && isItemOut) return false;
                 if (currentStatusTab === "soldout" && !isItemOut) return false;
+                if (currentStatusTab === "offers" && !isOfferItem) return false;
                 if (searchQuery && !normalizedName.includes(searchQuery)) return false;
                 if (currentCategoryFilter !== "all" && !normalizedName.includes(currentCategoryFilter)) return false;
 
