@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/3d-fluency/180/fish.png">
     <meta name="theme-color" content="#2563eb">
 
-    <!-- Open Graph / Social Media Meta Tags (WhatsApp, Insta, Facebook, Telegram, X) -->
+    <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="TruSea Stocks Update">
     <meta property="og:title" content="🐟 Live Seafood Stock Levels">
@@ -93,11 +93,11 @@
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen custom-scrollbar transition-colors duration-200">
 
-    <!-- Premium Sticky Header with Full "TruSea Stocks Update" Title -->
+    <!-- Premium Sticky Header -->
     <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-brand-dark/85 border-b border-slate-200/80 dark:border-slate-800/80 px-3 sm:px-6 py-3.5 transition-all">
         <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
             
-            <!-- Brand & 3D Logo Header -->
+            <!-- Brand Header -->
             <div class="flex items-center gap-2 sm:gap-3">
                 <img src="https://img.icons8.com/3d-fluency/94/fish.png" alt="TruSea 3D Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm shrink-0">
                 <h1 class="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent whitespace-nowrap">
@@ -128,7 +128,7 @@
         <!-- SEARCH & FILTER INTERACTION SUITE -->
         <div class="space-y-5">
             
-            <!-- Search Bar with Mobile Action Button -->
+            <!-- Search Bar -->
             <form id="searchForm" onsubmit="executeSearch(event)" class="max-w-2xl mx-auto">
                 <div class="gemini-glow-container shadow-sm">
                     <div class="flex items-center bg-white dark:bg-slate-900 rounded-[18px] px-3.5 py-2 sm:py-2.5">
@@ -142,7 +142,7 @@
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                         
-                        <!-- Mobile-Friendly Explicit Search Button -->
+                        <!-- Mobile Search Button -->
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1 shadow-md shadow-blue-500/20">
                             <span>Search</span>
                         </button>
@@ -150,7 +150,7 @@
                 </div>
             </form>
 
-            <!-- Status Split Tabs (All, In Stock, Sold Out, Fish Offers) -->
+            <!-- Status Split Tabs -->
             <div class="flex justify-center">
                 <div class="bg-slate-200/70 dark:bg-slate-900/90 p-1 rounded-2xl flex gap-1 border border-slate-300/40 dark:border-slate-800 overflow-x-auto no-scrollbar max-w-full">
                     <button id="tabAllStocks" class="px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap">
@@ -193,7 +193,7 @@
                     <p id="itemCountSubtext" class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Fetching stock list...</p>
                 </div>
                 
-                <!-- "Download As" Menu Button -->
+                <!-- Download As Dropdown -->
                 <div class="relative inline-block text-left">
                     <button id="dropdownToggleBtn" class="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-500/15 text-xs sm:text-sm active:scale-95">
                         <i data-lucide="download" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Download As <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
@@ -211,7 +211,7 @@
                 </div>
             </div>
 
-            <!-- Responsive Clean Stock Table -->
+            <!-- Responsive Stock Table -->
             <div id="stockCaptureArea" class="bg-white dark:bg-brand-cardDark rounded-2xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse">
@@ -240,8 +240,8 @@
     </main>
 
     <script>
-        // GOOGLE APPS SCRIPT API ENDPOINT
-        const API_URL = "https://script.google.com/macros/s/AKfycbzDKz-QoEr4cHgjcxFL-ILykIp5T3DLumiuevbbG2g-37Zl3YP1H090zU_bbrTO8sa4/execc";
+        // UPDATED GOOGLE APPS SCRIPT API ENDPOINT
+        const API_URL = "https://script.google.com/macros/s/AKfycbzDKz-QoEr4cHgjcxFL-ILykIp5T3DLumiuevbbG2g-37Zl3YP1H090zU_bbrTO8sa4/exec";
 
         let serverPayload = { stock: [] };
         let currentStatusTab = "instock"; 
@@ -302,7 +302,7 @@
             renderStockMetrics();
         }
 
-        // Mobile Form Search Execution
+        // Mobile Search Execution
         function executeSearch(e) {
             e.preventDefault();
             searchQuery = searchInput.value.trim().toLowerCase();
@@ -403,15 +403,27 @@
             renderedHeaderTitle.innerText = `TruSea Updated Fish Stocks As of ${dynamicDate}`;
             
             runningStockContext = (serverPayload.stock || []).filter(fish => {
-                const normalizedName = fish.name.toLowerCase();
-                const normalizedStatus = fish.status.toLowerCase();
+                const normalizedName = fish.name ? fish.name.toLowerCase() : '';
+                const normalizedStatus = fish.status ? fish.status.toLowerCase() : '';
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
-                const isOfferItem = fish.isOffer || fish.sheet === "Old Stocks" || fish.category === "Old Stocks" || normalizedStatus.includes('offer');
                 
-                if (currentStatusTab === "instock" && isItemOut) return false;
-                if (currentStatusTab === "soldout" && !isItemOut) return false;
-                if (currentStatusTab === "offers" && !isOfferItem) return false;
+                // Identify if item originates from Sheet 3 ("Old Stocks")
+                const isFromSheet3 = fish.isOffer === true || fish.sheet === "Old Stocks" || fish.category === "Old Stocks";
+
+                // Tab Filter Logic
+                if (currentStatusTab === "offers") {
+                    if (!isFromSheet3) return false; // Show only Sheet 3 items in Offers tab
+                } else {
+                    if (isFromSheet3) return false;  // Hide Sheet 3 items from main tabs
+                    
+                    if (currentStatusTab === "instock" && isItemOut) return false;
+                    if (currentStatusTab === "soldout" && !isItemOut) return false;
+                }
+
+                // Search Bar Filter
                 if (searchQuery && !normalizedName.includes(searchQuery)) return false;
+
+                // Category Filter Pills
                 if (currentCategoryFilter !== "all" && !normalizedName.includes(currentCategoryFilter)) return false;
 
                 return true;
@@ -419,7 +431,7 @@
 
             itemCountSubtext.innerText = `Showing ${runningStockContext.length} item(s) in menu`;
 
-            if(runningStockContext.length === 0) {
+            if (runningStockContext.length === 0) {
                 stockListBody.innerHTML = `
                     <tr>
                         <td colspan="4" class="py-10 px-4 text-center text-slate-400 dark:text-slate-500 font-medium">
@@ -432,7 +444,7 @@
             }
 
             runningStockContext.forEach(fish => {
-                const isOut = fish.kg <= 0 || fish.status.toLowerCase().includes('out');
+                const isOut = fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'));
                 const priceFormatted = fish.price && fish.price > 0 ? `₹${fish.price.toLocaleString('en-IN')}` : '-';
                 
                 const tr = document.createElement('tr');
@@ -468,7 +480,7 @@
             if (type === 'excel') {
                 let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Rate per kg (₹),Available Stock (kg)\n`;
                 runningStockContext.forEach(fish => {
-                    const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : "IN STOCK";
+                    const status = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : "IN STOCK";
                     const priceVal = fish.price ? fish.price : 0;
                     csvContent += `"${fish.name}",${status},${priceVal},${fish.kg.toFixed(2)}\n`;
                 });
@@ -499,7 +511,7 @@
                 doc.setFont("helvetica", "normal");
                 runningStockContext.forEach(fish => {
                     if (y > 275) { doc.addPage(); y = 20; }
-                    const displayWeight = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
+                    const displayWeight = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
                     const displayPrice = fish.price ? `Rs. ${fish.price}` : "-";
                     doc.text(fish.name, 15, y);
                     doc.text(displayPrice, 125, y);
@@ -522,7 +534,7 @@
                 let txtContent = `${documentHeading}\n`;
                 txtContent += "=".repeat(documentHeading.length) + "\n\n";
                 runningStockContext.forEach((fish, index) => {
-                    const status = (fish.kg <= 0 || fish.status.toLowerCase().includes('out')) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg Available`;
+                    const status = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg Available`;
                     const priceVal = fish.price ? `₹${fish.price}/kg` : "-/kg";
                     txtContent += `${index + 1}. ${fish.name.padEnd(45)} : ${priceVal.padEnd(12)} | ${status}\n`;
                 });
