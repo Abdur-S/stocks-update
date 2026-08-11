@@ -216,11 +216,11 @@
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50/90 dark:bg-slate-900/80 text-slate-400 dark:text-slate-400 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
-                                <th class="py-3 px-3 w-10 text-center">Status</th>
+                            <tr id="tableHeaderRow" class="bg-slate-50/90 dark:bg-slate-900/80 text-slate-400 dark:text-slate-400 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
+                                <th class="col-status py-3 px-3 w-10 text-center">Status</th>
                                 <th class="py-3 px-3 sm:px-4">Fish Product Name</th>
                                 <th class="py-3 px-2 sm:px-4 text-center w-28 sm:w-36">Rate / kg</th>
-                                <th class="py-3 px-3 sm:px-6 text-right w-28 sm:w-36">Available</th>
+                                <th class="col-available py-3 px-3 sm:px-6 text-right w-28 sm:w-36">Available</th>
                             </tr>
                         </thead>
                         <tbody id="stockListBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs sm:text-sm">
@@ -240,7 +240,7 @@
     </main>
 
     <script>
-        // UPDATED GOOGLE APPS SCRIPT API ENDPOINT
+        // GOOGLE APPS SCRIPT API ENDPOINT
         const API_URL = "https://script.google.com/macros/s/AKfycbzDKz-QoEr4cHgjcxFL-ILykIp5T3DLumiuevbbG2g-37Zl3YP1H090zU_bbrTO8sa4/exec";
 
         let serverPayload = { stock: [] };
@@ -402,19 +402,25 @@
             const dynamicDate = getFormattedDateString();
             renderedHeaderTitle.innerText = `TruSea Updated Fish Stocks As of ${dynamicDate}`;
             
+            const isOffersTab = currentStatusTab === "offers";
+
+            // Toggle table headers based on active tab
+            document.querySelectorAll('.col-status, .col-available').forEach(el => {
+                el.style.display = isOffersTab ? 'none' : '';
+            });
+
             runningStockContext = (serverPayload.stock || []).filter(fish => {
                 const normalizedName = fish.name ? fish.name.toLowerCase() : '';
                 const normalizedStatus = fish.status ? fish.status.toLowerCase() : '';
                 const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
                 
-                // Identify if item originates from Sheet 3 ("Old Stocks")
                 const isFromSheet3 = fish.isOffer === true || fish.sheet === "Old Stocks" || fish.category === "Old Stocks";
 
                 // Tab Filter Logic
-                if (currentStatusTab === "offers") {
-                    if (!isFromSheet3) return false; // Show only Sheet 3 items in Offers tab
+                if (isOffersTab) {
+                    if (!isFromSheet3) return false;
                 } else {
-                    if (isFromSheet3) return false;  // Hide Sheet 3 items from main tabs
+                    if (isFromSheet3) return false;
                     
                     if (currentStatusTab === "instock" && isItemOut) return false;
                     if (currentStatusTab === "soldout" && !isItemOut) return false;
@@ -432,9 +438,10 @@
             itemCountSubtext.innerText = `Showing ${runningStockContext.length} item(s) in menu`;
 
             if (runningStockContext.length === 0) {
+                const colspanVal = isOffersTab ? 2 : 4;
                 stockListBody.innerHTML = `
                     <tr>
-                        <td colspan="4" class="py-10 px-4 text-center text-slate-400 dark:text-slate-500 font-medium">
+                        <td colspan="${colspanVal}" class="py-10 px-4 text-center text-slate-400 dark:text-slate-500 font-medium">
                             <i data-lucide="package-x" class="w-8 h-8 mx-auto mb-2 opacity-60"></i>
                             No matching fish items found for this selection.
                         </td>
@@ -450,22 +457,37 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors border-b border-slate-100 dark:border-slate-800/60";
                 
-                tr.innerHTML = `
-                    <td class="py-3 px-3 text-center">
-                        <span class="inline-block h-2.5 w-2.5 rounded-full ${isOut ? 'bg-red-500 shadow-sm shadow-red-500/50' : 'bg-emerald-500 shadow-sm shadow-emerald-500/50'}"></span>
-                    </td>
-                    <td class="py-3 px-3 sm:px-4 font-bold text-slate-800 dark:text-slate-100 leading-snug">
-                        ${fish.name}
-                    </td>
-                    <td class="py-3 px-2 sm:px-4 text-center font-bold">
-                        <span class="inline-block bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-2 sm:px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60 text-[11px] sm:text-xs font-mono">
-                            ${priceFormatted} <span class="text-[9px] opacity-70">/kg</span>
-                        </span>
-                    </td>
-                    <td class="py-3 px-3 sm:px-6 text-right font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-[11px] sm:text-xs' : 'text-emerald-600 dark:text-emerald-400'}">
-                        ${isOut ? 'Sold Out' : `${fish.kg.toFixed(2)} kg`}
-                    </td>
-                `;
+                if (isOffersTab) {
+                    // Display only Product Name and Rate/kg for Offers
+                    tr.innerHTML = `
+                        <td class="py-3 px-3 sm:px-4 font-bold text-slate-800 dark:text-slate-100 leading-snug">
+                            ${fish.name}
+                        </td>
+                        <td class="py-3 px-2 sm:px-4 text-center font-bold">
+                            <span class="inline-block bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-2 sm:px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60 text-[11px] sm:text-xs font-mono">
+                                ${priceFormatted} <span class="text-[9px] opacity-70">/kg</span>
+                            </span>
+                        </td>
+                    `;
+                } else {
+                    // Full view for All, In Stock, and Sold Out
+                    tr.innerHTML = `
+                        <td class="py-3 px-3 text-center">
+                            <span class="inline-block h-2.5 w-2.5 rounded-full ${isOut ? 'bg-red-500 shadow-sm shadow-red-500/50' : 'bg-emerald-500 shadow-sm shadow-emerald-500/50'}"></span>
+                        </td>
+                        <td class="py-3 px-3 sm:px-4 font-bold text-slate-800 dark:text-slate-100 leading-snug">
+                            ${fish.name}
+                        </td>
+                        <td class="py-3 px-2 sm:px-4 text-center font-bold">
+                            <span class="inline-block bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-2 sm:px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60 text-[11px] sm:text-xs font-mono">
+                                ${priceFormatted} <span class="text-[9px] opacity-70">/kg</span>
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 sm:px-6 text-right font-mono font-bold ${isOut ? 'text-red-500 uppercase tracking-wide text-[11px] sm:text-xs' : 'text-emerald-600 dark:text-emerald-400'}">
+                            ${isOut ? 'Sold Out' : `${fish.kg.toFixed(2)} kg`}
+                        </td>
+                    `;
+                }
                 stockListBody.appendChild(tr);
             });
             lucide.createIcons();
