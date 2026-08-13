@@ -412,7 +412,7 @@
             runningStockContext = (serverPayload.stock || []).filter(fish => {
                 const normalizedName = fish.name ? fish.name.toLowerCase() : '';
                 const normalizedStatus = fish.status ? fish.status.toLowerCase() : '';
-                const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0;
+                const isItemOut = normalizedStatus.includes('out') || fish.kg <= 0.5;
                 
                 const isFromSheet3 = fish.isOffer === true || fish.sheet === "Old Stocks" || fish.category === "Old Stocks";
 
@@ -451,7 +451,7 @@
             }
 
             runningStockContext.forEach(fish => {
-                const isOut = fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'));
+                const isOut = fish.kg <= 0.5 || (fish.status && fish.status.toLowerCase().includes('out'));
                 const priceFormatted = fish.price && fish.price > 0 ? `₹${fish.price.toLocaleString('en-IN')}` : '-';
                 
                 const tr = document.createElement('tr');
@@ -500,7 +500,7 @@
             if (type === 'excel') {
                 let csvContent = `data:text/csv;charset=utf-8,${documentHeading}\n\nFish Variant Name,Current Status,Rate per kg (₹),Available Stock (kg)\n`;
                 runningStockContext.forEach(fish => {
-                    const status = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : "IN STOCK";
+                    const status = (fish.kg <= 0.5 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : "IN STOCK";
                     const priceVal = fish.price ? fish.price : 0;
                     csvContent += `"${fish.name}",${status},${priceVal},${fish.kg.toFixed(2)}\n`;
                 });
@@ -531,7 +531,7 @@
                 doc.setFont("helvetica", "normal");
                 runningStockContext.forEach(fish => {
                     if (y > 275) { doc.addPage(); y = 20; }
-                    const displayWeight = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
+                    const displayWeight = (fish.kg <= 0.5 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg`;
                     const displayPrice = fish.price ? `Rs. ${fish.price}` : "-";
                     doc.text(fish.name, 15, y);
                     doc.text(displayPrice, 125, y);
@@ -554,7 +554,7 @@
                 let txtContent = `${documentHeading}\n`;
                 txtContent += "=".repeat(documentHeading.length) + "\n\n";
                 runningStockContext.forEach((fish, index) => {
-                    const status = (fish.kg <= 0 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg Available`;
+                    const status = (fish.kg <= 0.5 || (fish.status && fish.status.toLowerCase().includes('out'))) ? "SOLD OUT" : `${fish.kg.toFixed(2)} kg Available`;
                     const priceVal = fish.price ? `₹${fish.price}/kg` : "-/kg";
                     txtContent += `${index + 1}. ${fish.name.padEnd(45)} : ${priceVal.padEnd(12)} | ${status}\n`;
                 });
